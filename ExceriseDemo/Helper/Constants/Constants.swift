@@ -5,7 +5,9 @@
 extension UIColor {
     
     class func appBlack() -> UIColor { return UIColor(named: "AppBlack")! }
+    class func appBlue() -> UIColor { return UIColor(named: "AppBlue")! }
     class func appGray() -> UIColor { return UIColor(named: "AppGray")! }
+    class func appOrange() -> UIColor { return UIColor(named: "AppOrange")! }
     class func appRed() -> UIColor { return UIColor(named: "AppRed")! }
 }
 
@@ -29,8 +31,8 @@ enum AllStoryBoard {
 enum ViewControllerName {
     
     static let kGetReadyVC = "GetReadyVC"
-    static let kFoodMenuVC = "FoodMenuVC"
-    static let kFoodDetailVC = "FoodDetailVC"
+    static let kExerciseVC = "ExerciseVC"
+    static let kBreakTimeVC = "BreakTimeVC"
 }
 
 //MARK: - Cell Identifiers
@@ -53,6 +55,10 @@ enum AlertMessage {
     static let msgNoCamera = "Device has no camera"
     static let msgImageSaveIssue = "Photo is unable to save in your local storage. Please check storage or try after some time"
     static let msgSelectPhoto = "Please select photo"
+    static let msgNotFoundBackCamera = "Could not find a back camera"
+    static let msgNotCreateVideoDevice = "Could not create video device input"
+    static let msgNotAddVideoInputSession = "Could not add video device input to the session"
+    static let msgNotAdVideoOutputSession = "Could not add video data output to the session"
     
     //General Error Message
     static let msgError = "Something went wrong. Please try after sometime"
@@ -121,3 +127,42 @@ enum DateAndTimeFormatString {
     static let strDateFormate_hhmma = "hh:mm a"
 }
 
+//MARK: - AppError
+enum AppError: Error {
+    case captureSessionSetup(reason: String)
+    case visionError(error: Error)
+    case otherError(error: Error)
+    
+    static func display(_ error: Error, inViewController viewController: UIViewController) {
+        if let appError = error as? AppError {
+            appError.displayInViewController(viewController)
+        } else {
+            AppError.otherError(error: error).displayInViewController(viewController)
+        }
+    }
+    
+    func displayInViewController(_ viewController: UIViewController) {
+        let title: String?
+        let message: String?
+        
+        switch self {
+        
+        case .captureSessionSetup(let reason):
+            title = "AVSession Setup Error"
+            message = reason
+            
+        case .visionError(let error):
+            title = "Vision Error"
+            message = error.localizedDescription
+            
+        case .otherError(let error):
+            title = "Error"
+            message = error.localizedDescription
+        }
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        
+        viewController.present(alert, animated: true, completion: nil)
+    }
+}

@@ -1,18 +1,18 @@
 //
-//  GetReadyVC.swift
+//  BreakTimeVC.swift
 //  ExceriseDemo
 //
 //  Created by Nirzar Gandhi on 03/09/21.
 //
 
-class GetReadyVC: UIViewController {
-    
+class BreakTimeVC: UIViewController {
     //MARK: - UILabel Outlet
+    @IBOutlet weak var lblExerciseName: UILabel!
     @IBOutlet weak var lblTimer: UILabel!
     
     //MARK: - Variable Declaration
     var timer = Timer()
-    var intTimerCount = 3
+    var intTimerCount = 20
     
     //MARK: - ViewController Methods
     override func viewDidLoad() {
@@ -22,6 +22,9 @@ class GetReadyVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        lblTimer.text = "00:20"
+        
         self.perform(#selector(self.startTimer), with: nil, afterDelay: 1.0)
     }
     
@@ -41,12 +44,19 @@ class GetReadyVC: UIViewController {
         if intTimerCount > 0 {
             intTimerCount -= 1
             
-            lblTimer.text = "\(intTimerCount)"
+            lblTimer.text = timeString(time: TimeInterval(intTimerCount))
         } else {
             timer.invalidate()
             
-            let objExerciseVC = AllStoryBoard.Main.instantiateViewController(withIdentifier: ViewControllerName.kExerciseVC) as! ExerciseVC
-            self.navigationController?.pushViewController(objExerciseVC, animated: true)
+            self.navigationController?.popViewController(animated: true)
         }
+    }
+    
+    //MARK: - Time String Method
+    func timeString(time:TimeInterval) -> String {
+        _ = Int(time) / 3600
+        let minutes = Int(time) / 60 % 60
+        let seconds = Int(time) % 60
+        return String(format:"%02i:%02i", minutes, seconds)
     }
 }

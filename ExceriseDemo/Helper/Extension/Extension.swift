@@ -83,7 +83,7 @@ extension UIViewController {
         label.backgroundColor = .clear
         label.numberOfLines = 2
         label.lineBreakMode = .byWordWrapping
-        label.font = UIFont(name: "Montserrat-Bold", size: 22.0) ?? UIFont.systemFont(ofSize: 22).withWeight(UIFont.Weight.bold)
+        label.font = UIFont(name: "Poppins-Bold", size: 22.0) ?? UIFont.systemFont(ofSize: 22).withWeight(UIFont.Weight.bold)
         label.textAlignment = .center
         label.textColor = .white
         label.text = strTitleName
